@@ -13,7 +13,7 @@ const operate = (a, b, operator) => {
         operator == 'x' ? multiply(a, b) :
         operator == '/' ? divide(a, b) : 
         "ERROR";
-        return (Math.round(answer*10000))/10000;
+        return (Math.round(answer*100000))/100000;
     } else{
         return a == undefined ? 'ERROR' : a;
     }
