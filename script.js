@@ -1,8 +1,8 @@
 //some general functions for the calculator
-const add = (a, b) => a+b;
-const substract = (a, b) => a-b;
-const multiply = (a, b) => a*b;
-const divide = (a, b) => a/b;
+const add = (a, b) => +a + +b;
+const substract = (a, b) => +a - +b;
+const multiply = (a, b) => +a * +b;
+const divide = (a, b) => +a / +b;
 
 const operate = (a, b, operator) => {
     let answer;
@@ -24,6 +24,7 @@ let equation = {
     secondNum: undefined,
     operator: undefined,
 }
+const display = document.getElementById('display-content');
 
 //digit and operator buttons.
 let digitBtns = [...document.querySelectorAll('.digit-btn')];
@@ -46,20 +47,54 @@ document.getElementById('clear-btn').addEventListener('click', (e) => {
     equation.firstNum = undefined;
     equation.secondNum = undefined;
     equation.operator = undefined;
-})
+});
 
 //event when the equels btn is clicked
 document.getElementById('equels-btn').addEventListener('click', (e) => {
     let result = operate(equation.firstNum, equation.secondNum, equation.operator);
     setDisplayContent(result, true);
-})
+});
+document.getElementById('backspace-btn').addEventListener('click', (e) => {
+    setDisplayContent('', false, false, true);
+});
 
 //function that changes the content of the display.
-const setDisplayContent = (string, clear = false, operator = false) => {
-    const display = document.getElementById('display-content');
+const setDisplayContent = (string, clear = false, operator = false, backspace = false) => {
+    let operation = (display.innerHTML+string).split(' ');
+
     if(clear || display.innerHTML == 'ERROR' || display.innerHTML == 'Infinity' || display.innerHTML == 'NaN'){
         display.innerHTML = '';
     }
+
+    //if the user clicks on backspace.
+    if(backspace){
+        let displayArray = display.innerHTML.split('');
+
+        //if the last character is an operator (" + ")
+        if(displayArray[displayArray.length -1] == " "){
+            //remove the operator and whitespaces and set the operator to undefined.
+            displayArray.splice(displayArray.length -3, 3);
+            display.innerHTML = displayArray.join('');
+            equation.operator = undefined;
+            return;
+        } else {
+            //else remove only the last character.
+            displayArray.splice(displayArray.length -1, 1);
+            display.innerHTML = displayArray.join('');
+
+            //if the display doenst include operators, change the first number.
+            if(!includesOperators(display.innerHTML)){
+                equation.firstNum = display.innerHTML;
+                equation.secondNum = undefined;
+            //else, change the second number. 
+            } else {
+                //make sure that the last number exists, otherwise set it to undefined.
+                !(displayArray[displayArray.length -1] == " ") ? equation.secondNum = display.innerHTM.split(' ')[2] : equation.secondNum = undefined;
+            }
+            return;
+            }
+    }
+    
     
     if(operator){
         if(includesOperators(display.innerHTML)){
@@ -68,10 +103,15 @@ const setDisplayContent = (string, clear = false, operator = false) => {
         equation.operator = string.trim();
     } else {
         if(!includesOperators(display.innerHTML)){
-            equation.firstNum = +(display.innerHTML+string);
+            if(includesDecimal(equation.firstNum) && string == '.'){
+                return;
+            }
+            equation.firstNum = (display.innerHTML+string);
         } else {
-            let operation = (display.innerHTML+string).split(' ');
-            equation.secondNum = +operation[operation.length -1];
+            if(includesDecimal(equation.secondNum) && string == '.'){
+                return;
+            }
+            equation.secondNum = operation[operation.length -1];
         }
     }
     console.log(equation);
@@ -82,6 +122,14 @@ const includesOperators = (string) => {
     if(string.includes(' / ') || string.includes(' x ') || string.includes(' - ') || string.includes(' + ')){
         return true;
     } else {
+        return false;
+    }
+}
+const includesDecimal = (string) => {
+    if(string == undefined) return;
+    if(string.includes('.')){
+        return true;
+    }else{
         return false;
     }
 }

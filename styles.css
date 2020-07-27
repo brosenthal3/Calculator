@@ -82,7 +82,7 @@ header h1{
 #sidebar .calc-btn{
     width:100%;
 }
-#clear-btn, #zero-btn{
-    width:100%;
+#zero-btn, #clear-btn{
+    width:66.66%;
     text-align:center;
 }
