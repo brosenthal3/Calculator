@@ -13,7 +13,7 @@ const operate = (a, b, operator) => {
         operator == 'x' ? multiply(a, b) :
         operator == '/' ? divide(a, b) : 
         "ERROR";
-        return (Math.round(answer*100000))/100000;
+        return (Math.round(answer*10000))/10000;
     } else{
         return a == undefined ? 'ERROR' : a;
     }
@@ -66,6 +66,7 @@ const setDisplayContent = (string, clear = false, operator = false, backspace = 
         display.innerHTML = '';
     }
 
+
     //if the user clicks on backspace.
     if(backspace){
         let displayArray = display.innerHTML.split('');
@@ -114,7 +115,6 @@ const setDisplayContent = (string, clear = false, operator = false, backspace = 
             equation.secondNum = operation[operation.length -1];
         }
     }
-    console.log(equation);
     display.innerHTML += string;
 }
 
